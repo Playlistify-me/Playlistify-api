@@ -1,5 +1,8 @@
 package io.playlistify.api;
 
+/**
+ * Generates a random string of characters.
+ */
 public class GenerateRandomString{
     /**
      * Generates a random string of characters.
