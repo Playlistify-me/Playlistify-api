@@ -1,7 +1,7 @@
 package io.playlistify.api.Controllers;
 
-import io.playlistify.api.Authorization.AuthCode;
-import io.playlistify.api.Authorization.AuthSpotifyApi;
+import io.playlistify.api.Authorization.SpotifyApiAuthenticator;
+import io.playlistify.api.Factories.SpotifyApiFactory;
 import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,22 +21,24 @@ import java.io.IOException;
 @RequestMapping("/callback")
 public class CallbackController {
     Logger logger = LoggerFactory.getLogger(CallbackController.class);
-    private SpotifyApi spotifyApi = AuthSpotifyApi.getSpotifyApi();
-
-    private AuthCode authCode;
+    private SpotifyApi spotifyApi = SpotifyApiFactory.getBasicSpotifyApi();
 
     @GetMapping("")
     public ResponseEntity<String> callback(@RequestParam String code) {
         logger.info("code = " + code);
-        authCode = new AuthCode(spotifyApi, code);
+        SpotifyApiAuthenticator spotifyApiAuthenticator = new SpotifyApiAuthenticator(code);
 
-        logger.info("authorization code = " + authCode.getCode());
+        SpotifyApi authenticatedSpotifyApi = spotifyApiAuthenticator.getSpotifyApi();
 
-        logger.info("refresh token = " + AuthSpotifyApi.getSpotifyApi().getRefreshToken());
+        logger.info("access code = " + authenticatedSpotifyApi.getAccessToken());
+
+        logger.info("refresh token = " + authenticatedSpotifyApi.getRefreshToken());
 
         try {
-            User currentUser = AuthSpotifyApi.getSpotifyApi().getCurrentUsersProfile().build().execute();
+            User currentUser = authenticatedSpotifyApi.getCurrentUsersProfile().build().execute();
             logger.info("user name = " + currentUser.getDisplayName());
+
+            logger.info("First playlist name = " + authenticatedSpotifyApi.getListOfCurrentUsersPlaylists().build().execute().getItems()[0].getName());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
