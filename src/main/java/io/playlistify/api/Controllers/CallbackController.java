@@ -21,24 +21,24 @@ import java.io.IOException;
 @RequestMapping("/callback")
 public class CallbackController {
     Logger logger = LoggerFactory.getLogger(CallbackController.class);
-    private SpotifyApi spotifyApi = SpotifyApiFactory.getBasicSpotifyApi();
 
     @GetMapping("")
     public ResponseEntity<String> callback(@RequestParam String code) {
         logger.info("code = " + code);
-        SpotifyApiAuthenticator spotifyApiAuthenticator = new SpotifyApiAuthenticator(code);
 
-        SpotifyApi authenticatedSpotifyApi = spotifyApiAuthenticator.getSpotifyApi();
+        String accessToken = SpotifyApiAuthenticator.getAccessSetRefreshToken(code);
 
-        logger.info("access code = " + authenticatedSpotifyApi.getAccessToken());
+        SpotifyApi spotifyApiWithAccessToken = SpotifyApiFactory.getSpotifyApiWithAccessToken(accessToken);
 
-        logger.info("refresh token = " + authenticatedSpotifyApi.getRefreshToken());
+        logger.info("access code = " + spotifyApiWithAccessToken.getAccessToken());
+
+        logger.info("refresh token = " + spotifyApiWithAccessToken.getRefreshToken());
 
         try {
-            User currentUser = authenticatedSpotifyApi.getCurrentUsersProfile().build().execute();
+            User currentUser = spotifyApiWithAccessToken.getCurrentUsersProfile().build().execute();
             logger.info("user name = " + currentUser.getDisplayName());
 
-            logger.info("First playlist name = " + authenticatedSpotifyApi.getListOfCurrentUsersPlaylists().build().execute().getItems()[0].getName());
+            logger.info("First playlist name = " + spotifyApiWithAccessToken.getListOfCurrentUsersPlaylists().build().execute().getItems()[0].getName());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }

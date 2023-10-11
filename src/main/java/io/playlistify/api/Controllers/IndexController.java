@@ -10,7 +10,7 @@ import java.net.URI;
 
 @RestController
 public class IndexController {
-    private final URI authCodeUri = new SpotifyApiAuthenticator().getAuthCodeUri();
+    private final URI authCodeUri = SpotifyApiAuthenticator.getAuthCodeUri();
 
     @GetMapping("/")
     public String index() {

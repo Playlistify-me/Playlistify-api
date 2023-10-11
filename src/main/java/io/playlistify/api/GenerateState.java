@@ -3,7 +3,7 @@ package io.playlistify.api;
 /**
  * Generates a random string of characters.
  */
-public class GenerateRandomString{
+public class GenerateState {
     /**
      * Generates a random string of characters.
      * @param length The length of the string to be generated.

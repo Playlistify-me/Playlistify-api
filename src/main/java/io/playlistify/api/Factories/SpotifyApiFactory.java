@@ -22,4 +22,12 @@ public class SpotifyApiFactory {
 
         return spotifyApi;
     }
+
+    public static SpotifyApi getSpotifyApiWithAccessToken(String accessToken) {
+        SpotifyApi spotifyApi = new SpotifyApi.Builder()
+                .setAccessToken(accessToken)
+                .build();
+
+        return spotifyApi;
+    }
 }
