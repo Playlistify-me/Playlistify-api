@@ -44,10 +44,7 @@ public class SpotifyApiAuthenticator {
 
             String accessToken = authorizationCodeCredentials.getAccessToken();
             String refreshToken = authorizationCodeCredentials.getRefreshToken();
-            TokenDto tokenDto = new TokenDto(accessToken, refreshToken);
-
-
-            return tokenDto;
+            return new TokenDto(accessToken, refreshToken);
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
