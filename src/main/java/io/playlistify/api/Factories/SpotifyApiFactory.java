@@ -1,6 +1,7 @@
 package io.playlistify.api.Factories;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import io.playlistify.api.Authorization.TokenDto;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
 
@@ -11,23 +12,27 @@ public class SpotifyApiFactory {
         Dotenv dotenv = Dotenv.load();
 
         final String spotifyClientId = dotenv.get("spotify.client.id");
-        final String spotifySecretId = dotenv.get("spotify.client.secret");
+        final String spotifyClientSecret = dotenv.get("spotify.client.secret");
         final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/callback");
 
-        SpotifyApi spotifyApi = new SpotifyApi.Builder()
+        return spotifyApi = new SpotifyApi.Builder()
                 .setClientId(spotifyClientId)
-                .setClientSecret(spotifySecretId)
+                .setClientSecret(spotifyClientSecret)
                 .setRedirectUri(redirectUri)
                 .build();
-
-        return spotifyApi;
     }
 
-    public static SpotifyApi getSpotifyApiWithAccessToken(String accessToken) {
-        SpotifyApi spotifyApi = new SpotifyApi.Builder()
-                .setAccessToken(accessToken)
-                .build();
+    public static SpotifyApi getSpotifyApiWithTokens(TokenDto tokens) {
+        Dotenv dotenv = Dotenv.load();
 
-        return spotifyApi;
+        final String spotifyClientId = dotenv.get("spotify.client.id");
+        final String spotifyClientSecret = dotenv.get("spotify.client.secret");
+
+        return new SpotifyApi.Builder()
+                .setClientId(spotifyClientId)
+                .setClientSecret(spotifyClientSecret)
+                .setAccessToken(tokens.getAccessToken())
+                .setRefreshToken(tokens.getRefreshToken())
+                .build();
     }
 }

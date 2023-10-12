@@ -10,15 +10,16 @@ import java.net.URI;
 
 @RestController
 public class IndexController {
-    private final URI authCodeUri = SpotifyApiAuthenticator.getAuthCodeUri();
 
     @GetMapping("/")
     public String index() {
-        return "uri = " + authCodeUri.toString();
+        URI authCodeURI = SpotifyApiAuthenticator.generateAuthCodeUri();
+        return "uri = " + authCodeURI.toString();
     }
 
     @GetMapping("/test")
     public RedirectView test() {
-        return new RedirectView(authCodeUri.toString());
+        URI authCodeURI = SpotifyApiAuthenticator.generateAuthCodeUri();
+        return new RedirectView(authCodeURI.toString());
     }
 }

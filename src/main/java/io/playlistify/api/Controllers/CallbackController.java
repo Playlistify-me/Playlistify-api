@@ -1,6 +1,7 @@
 package io.playlistify.api.Controllers;
 
 import io.playlistify.api.Authorization.SpotifyApiAuthenticator;
+import io.playlistify.api.Authorization.TokenDto;
 import io.playlistify.api.Factories.SpotifyApiFactory;
 import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
@@ -26,9 +27,9 @@ public class CallbackController {
     public ResponseEntity<String> callback(@RequestParam String code) {
         logger.info("code = " + code);
 
-        String accessToken = SpotifyApiAuthenticator.getAccessSetRefreshToken(code);
+        TokenDto tokens = SpotifyApiAuthenticator.getAccessSetRefreshToken(code);
 
-        SpotifyApi spotifyApiWithAccessToken = SpotifyApiFactory.getSpotifyApiWithAccessToken(accessToken);
+        SpotifyApi spotifyApiWithAccessToken = SpotifyApiFactory.getSpotifyApiWithTokens(tokens);
 
         logger.info("access code = " + spotifyApiWithAccessToken.getAccessToken());
 

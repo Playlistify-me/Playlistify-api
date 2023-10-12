@@ -2,6 +2,7 @@ package io.playlistify.api.Authorization;
 
 import io.playlistify.api.Factories.SpotifyApiFactory;
 import io.playlistify.api.GenerateState;
+import lombok.Getter;
 import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -19,17 +20,11 @@ public class SpotifyApiAuthenticator {
     private static final SpotifyApi spotifyApi = SpotifyApiFactory.getBasicSpotifyApi();
 
     /**
-     * The authorization code {@link URI}.
+     * Generates the {@link URI} from the {@link AuthorizationCodeUriRequest} object.
+     * @return {@link URI}.
      */
-    private static URI authCodeUri = generateAuthCodeUri();
-
-    /**
-     * Gets the {@link AuthorizationCodeRequest} required for the {@link AuthorizationCodeCredentials}.
-     * @return
-     */
-    private static AuthorizationCodeRequest getAuthorizationCodeRequest(String authCode) {
-        return spotifyApi.authorizationCode(authCode)
-                .build();
+    public static URI generateAuthCodeUri() {
+        return getAuthorizationCodeUriRequest().execute();
     }
 
     /**
@@ -39,7 +34,7 @@ public class SpotifyApiAuthenticator {
      * This is the code that is returned to the redirect URI after the user has accepted the scopes.
      * @return The access token.
      */
-    public static String getAccessSetRefreshToken(String authCode) {
+    public static TokenDto getAccessSetRefreshToken(String authCode) {
         // Either return [] with both tokens or keep it like this. Not sure yet.
         // I guess it also needs the user id?
         AuthorizationCodeRequest authorizationCodeRequest = getAuthorizationCodeRequest(authCode);
@@ -47,15 +42,13 @@ public class SpotifyApiAuthenticator {
         try {
             final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
 
-            authorizationCodeCredentials.getRefreshToken();
-            // TODO:
-            //  Set the refresh token in the database.
-            //  This is done by calling the UserService.setRefreshTokenForUserId(UUID userId, String refreshToken) method.
+            String accessToken = authorizationCodeCredentials.getAccessToken();
+            String refreshToken = authorizationCodeCredentials.getRefreshToken();
+            TokenDto tokenDto = new TokenDto(accessToken, refreshToken);
 
-            return authorizationCodeCredentials.getAccessToken();
-            // TODO:
-            //  Set the access token in the database.
-            //  This is done by calling the UserService.setAccessTokenForUserId(UUID userId, String accessToken) method.
+
+            return tokenDto;
+
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -64,11 +57,12 @@ public class SpotifyApiAuthenticator {
     }
 
     /**
-     * Generates the {@link #authCodeUri} from the {@link AuthorizationCodeUriRequest} object.
-     * @return {@link #authCodeUri}.
+     * Gets the {@link AuthorizationCodeRequest} required for the {@link AuthorizationCodeCredentials}.
+     * @return
      */
-    private static URI generateAuthCodeUri() {
-        return getAuthorizationCodeUriRequest().execute();
+    private static AuthorizationCodeRequest getAuthorizationCodeRequest(String authCode) {
+        return spotifyApi.authorizationCode(authCode)
+                .build();
     }
 
     /**
@@ -81,14 +75,5 @@ public class SpotifyApiAuthenticator {
                 //.state(GenerateState.generateString(generatedStringLength);)
                 //.scope() scope here
                 .build();
-    }
-
-    /**
-     * Gets the {@link #authCodeUri}.
-     *
-     * @return {@link #authCodeUri}.
-     */
-    public static URI getAuthCodeUri() {
-        return authCodeUri;
     }
 }
