@@ -13,8 +13,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     public UUID id;
 
-    @Column(name = "access_token")
     public String accessToken;
-    @Column(name = "refresh_token")
     public String refreshToken;
 }
