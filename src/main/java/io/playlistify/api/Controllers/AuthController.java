@@ -19,10 +19,10 @@ public class AuthController {
     }
 
     @PostMapping("authcodegrant")
-    public ResponseEntity<> AuthCodeRequest(@RequestBody() AuthCodeRequestDto authCodeRequestDto) {
+    public ResponseEntity<?> AuthCodeRequest(@RequestBody() AuthCodeRequestDto authCodeRequestDto) {
         TokenDto tokens = SpotifyApiAuthenticator.getAccessSetRefreshToken(authCodeRequestDto.getAuthCode());
 
-
+        return ResponseEntity.ok(tokens);
 
 
     }
