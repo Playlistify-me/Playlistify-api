@@ -7,11 +7,14 @@ import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
+import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
+import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Instant;
 
 public class SpotifyApiAuthenticator {
     /**
@@ -72,5 +75,35 @@ public class SpotifyApiAuthenticator {
                 //.state(GenerateState.generateString(generatedStringLength);)
                 //.scope() scope here
                 .build();
+    }
+
+    private static ClientCredentialsRequest getClientCredentialsRequest(SpotifyApi spotifyApi) {
+        return spotifyApi.clientCredentials()
+                .build();
+    }
+
+    /**
+     * Gets the access token and expiry time, required for the {@link ClientCredentials}.
+     * @param spotifyApi The {@link SpotifyApi} object required for the {@link ClientCredentialsRequest}.
+     * @return {@link ClientCredentialsDto} containing the access token and the time the access token expires.
+     */
+    public static ClientCredentialsDto getClientCredentialsAccessToken(SpotifyApi spotifyApi) {
+        try {
+            final ClientCredentialsRequest clientCredentialsRequest = getClientCredentialsRequest(spotifyApi);
+
+            ClientCredentials clientCredentials = clientCredentialsRequest.execute();
+
+            String accessToken = clientCredentials.getAccessToken();
+            int expiresInSeconds = clientCredentials.getExpiresIn();
+
+            Instant expiresAt = Instant.now().plusSeconds(expiresInSeconds);
+
+            return new ClientCredentialsDto(accessToken, expiresAt);
+
+        } catch (IOException | SpotifyWebApiException | ParseException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        return null;
     }
 }

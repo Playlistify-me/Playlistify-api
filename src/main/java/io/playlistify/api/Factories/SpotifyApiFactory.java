@@ -1,9 +1,13 @@
 package io.playlistify.api.Factories;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import io.playlistify.api.Authorization.ClientCredentialsDto;
+import io.playlistify.api.Authorization.SpotifyApiAuthenticator;
 import io.playlistify.api.Authorization.TokenDto;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
+import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
+import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 
 import java.net.URI;
 
@@ -34,5 +38,15 @@ public class SpotifyApiFactory {
                 .setAccessToken(tokens.getAccessToken())
                 .setRefreshToken(tokens.getRefreshToken())
                 .build();
+    }
+
+    public static SpotifyApi getSpotifyApiClientCredentials() {
+        SpotifyApi spotifyApi = getBasicSpotifyApi();
+
+        ClientCredentialsDto clientCredentialsTokens = SpotifyApiAuthenticator.getClientCredentialsAccessToken(spotifyApi);
+
+        spotifyApi.setAccessToken(clientCredentialsTokens.getAccessToken());
+
+        return spotifyApi;
     }
 }
