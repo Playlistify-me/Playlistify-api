@@ -15,7 +15,7 @@ public class SpotifyApiFactory {
         final String spotifyClientSecret = dotenv.get("spotify.client.secret");
         final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/callback");
 
-        return spotifyApi = new SpotifyApi.Builder()
+        return new SpotifyApi.Builder()
                 .setClientId(spotifyClientId)
                 .setClientSecret(spotifyClientSecret)
                 .setRedirectUri(redirectUri)
