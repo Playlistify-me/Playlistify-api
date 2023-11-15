@@ -87,14 +87,14 @@ public class SpotifyApiAuthenticator {
      * @param spotifyApi The {@link SpotifyApi} object required for the {@link ClientCredentialsRequest}.
      * @return {@link ClientCredentialsDto} containing the access token and the time the access token expires.
      */
-    public static ClientCredentialsDto getClientCredentialsAccessToken(SpotifyApi spotifyApi) {
+    public static ClientCredentialsDto getClientCredentialsAccessToken(SpotifyApi spotifyApi) throws IOException, ParseException, SpotifyWebApiException {
         try {
             final ClientCredentialsRequest clientCredentialsRequest = getClientCredentialsRequest(spotifyApi);
 
-            ClientCredentials clientCredentials = clientCredentialsRequest.execute();
+            final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
 
-            String accessToken = clientCredentials.getAccessToken();
-            int expiresInSeconds = clientCredentials.getExpiresIn();
+            final String accessToken = clientCredentials.getAccessToken();
+            final int expiresInSeconds = clientCredentials.getExpiresIn();
 
             Instant expiresAt = Instant.now().plusSeconds(expiresInSeconds);
 
@@ -102,8 +102,7 @@ public class SpotifyApiAuthenticator {
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
+            throw e;
         }
-
-        return null;
     }
 }

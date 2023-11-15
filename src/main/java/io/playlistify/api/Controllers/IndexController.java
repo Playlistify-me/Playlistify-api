@@ -22,28 +22,9 @@ public class IndexController {
         return "uri = " + authCodeURI.toString();
     }
 
-    @GetMapping("/test")
-    public String test() {
-        SpotifyApi spotifyApiCC = SpotifyApiFactory.getSpotifyApiClientCredentials();
-
-        String spotifyDevId = "31htnbwollsrbp7lmf3uvwq3h3pu";
-        String testDevId = "";
-
-        try {
-            testDevId = spotifyApiCC.getUsersProfile(spotifyDevId).build().execute().getId();
-
-        } catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-
-        return testDevId;
-    }
-
     @GetMapping("/testUri")
     public RedirectView testUri() {
         URI authCodeURI = SpotifyApiAuthenticator.generateAuthCodeUri();
         return new RedirectView(authCodeURI.toString());
     }
-
-
 }

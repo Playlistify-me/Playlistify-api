@@ -4,20 +4,23 @@ import io.github.cdimascio.dotenv.Dotenv;
 import io.playlistify.api.Authorization.ClientCredentialsDto;
 import io.playlistify.api.Authorization.SpotifyApiAuthenticator;
 import io.playlistify.api.Authorization.TokenDto;
+import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
-import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
-import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
+import java.io.IOException;
 import java.net.URI;
 
 public class SpotifyApiFactory {
-    public static SpotifyApi getBasicSpotifyApi() {
-        Dotenv dotenv = Dotenv.load();
+    static final Dotenv dotenv = Dotenv.load();
 
+    public static SpotifyApi getBasicSpotifyApi() {
         final String spotifyClientId = dotenv.get("spotify.client.id");
         final String spotifyClientSecret = dotenv.get("spotify.client.secret");
-        final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/callback");
+        final String spotifyRedirectUrl = dotenv.get("spotify.redirect.url");
+
+        final URI redirectUri = SpotifyHttpManager.makeUri(spotifyRedirectUrl);
 
         return new SpotifyApi.Builder()
                 .setClientId(spotifyClientId)
@@ -27,8 +30,6 @@ public class SpotifyApiFactory {
     }
 
     public static SpotifyApi getSpotifyApiWithTokens(TokenDto tokens) {
-        Dotenv dotenv = Dotenv.load();
-
         final String spotifyClientId = dotenv.get("spotify.client.id");
         final String spotifyClientSecret = dotenv.get("spotify.client.secret");
 
@@ -40,10 +41,10 @@ public class SpotifyApiFactory {
                 .build();
     }
 
-    public static SpotifyApi getSpotifyApiClientCredentials() {
-        SpotifyApi spotifyApi = getBasicSpotifyApi();
+    public static SpotifyApi getSpotifyApiClientCredentials() throws IOException, ParseException, SpotifyWebApiException {
+        final SpotifyApi spotifyApi = getBasicSpotifyApi();
 
-        ClientCredentialsDto clientCredentialsTokens = SpotifyApiAuthenticator.getClientCredentialsAccessToken(spotifyApi);
+        final ClientCredentialsDto clientCredentialsTokens = SpotifyApiAuthenticator.getClientCredentialsAccessToken(spotifyApi);
 
         spotifyApi.setAccessToken(clientCredentialsTokens.getAccessToken());
 
