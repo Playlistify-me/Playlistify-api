@@ -2,7 +2,7 @@ name: SonarCloud
 on:
   push:
     branches:
-      - master
+      - main
       - feature/cicd
   pull_request:
     types: [opened, synchronize, reopened]
