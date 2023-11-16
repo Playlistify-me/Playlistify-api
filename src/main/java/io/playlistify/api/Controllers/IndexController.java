@@ -1,6 +1,9 @@
 package io.playlistify.api.Controllers;
 
 import io.playlistify.api.Authorization.SpotifyApiAuthenticator;
+import io.playlistify.api.Entities.User;
+import io.playlistify.api.Services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import io.playlistify.api.Factories.SpotifyApiFactory;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,10 +14,18 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 
 @RestController
 public class IndexController {
+
+    private final UserService userService;
+
+    @Autowired
+    public IndexController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/")
     public String index() {
@@ -22,8 +33,13 @@ public class IndexController {
         return "uri = " + authCodeURI.toString();
     }
 
-    @GetMapping("/testUri")
-    public RedirectView testUri() {
+    @GetMapping("/users")
+    public List<User> GetAllUsers() {
+        return userService.findAll();
+    }
+
+    @GetMapping("/test")
+    public RedirectView test() {
         URI authCodeURI = SpotifyApiAuthenticator.generateAuthCodeUri();
         return new RedirectView(authCodeURI.toString());
     }
