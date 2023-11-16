@@ -5,7 +5,7 @@ RUN gradle clean bootJar
 
 FROM eclipse-temurin:17-jre-alpine AS runner
 WORKDIR /app
-COPY .env .
+COPY .env* .
 COPY --from=builder /app/build/libs/*.jar app.jar
 EXPOSE 8080
 
