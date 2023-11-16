@@ -21,10 +21,4 @@ public class IndexController {
         URI authCodeURI = SpotifyApiAuthenticator.generateAuthCodeUri();
         return "uri = " + authCodeURI.toString();
     }
-
-    @GetMapping("/testUri")
-    public RedirectView testUri() {
-        URI authCodeURI = SpotifyApiAuthenticator.generateAuthCodeUri();
-        return new RedirectView(authCodeURI.toString());
-    }
 }
