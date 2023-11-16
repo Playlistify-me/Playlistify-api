@@ -21,8 +21,8 @@ class PlaylistifyApiApplicationTests {
     @Test
     void authUriTest() {
         final Dotenv dotenv = Dotenv.load();
-        final String clientId = dotenv.get("spotify.client.id");
-        final String redirectUrl = dotenv.get("spotify.redirect.url");
+        final String clientId = dotenv.get("SPOTIFY_CLIENT_ID");
+        final String redirectUrl = dotenv.get("SPOTIFY_REDIRECT_URL");
 
         // encoding url because it's encoded from generateAuthCodeUri
         final String redirectUrlEncoded = URLEncoder.encode(redirectUrl, StandardCharsets.UTF_8);

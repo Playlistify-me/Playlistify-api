@@ -16,9 +16,9 @@ public class SpotifyApiFactory {
     static final Dotenv dotenv = Dotenv.load();
 
     public static SpotifyApi getBasicSpotifyApi() {
-        final String spotifyClientId = dotenv.get("spotify.client.id");
-        final String spotifyClientSecret = dotenv.get("spotify.client.secret");
-        final String spotifyRedirectUrl = dotenv.get("spotify.redirect.url");
+        final String spotifyClientId = dotenv.get("SPOTIFY_CLIENT_ID");
+        final String spotifyClientSecret = dotenv.get("SPOTIFY_CLIENT_SECRET");
+        final String spotifyRedirectUrl = dotenv.get("SPOTIFY_REDIRECT_URL");
 
         final URI redirectUri = SpotifyHttpManager.makeUri(spotifyRedirectUrl);
 
@@ -30,8 +30,8 @@ public class SpotifyApiFactory {
     }
 
     public static SpotifyApi getSpotifyApiWithTokens(TokenDto tokens) {
-        final String spotifyClientId = dotenv.get("spotify.client.id");
-        final String spotifyClientSecret = dotenv.get("spotify.client.secret");
+        final String spotifyClientId = dotenv.get("SPOTIFY_CLIENT_ID");
+        final String spotifyClientSecret = dotenv.get("SPOTIFY_CLIENT_SECRET");
 
         return new SpotifyApi.Builder()
                 .setClientId(spotifyClientId)
