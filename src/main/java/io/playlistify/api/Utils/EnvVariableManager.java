@@ -16,8 +16,8 @@ public final class EnvVariableManager {
     private static String spotifyRedirectUrl = SetEnv(SPOTIFY_REDIRECT_URL);
 
     private static String SetEnv(String envName) {
-        final String systemEnv = SetSystemEnv(envName);
-        final String localEnv = SetLocalEnv(envName);
+        final String systemEnv = GetSystemEnvValue(envName);
+        final String localEnv = GetLocalEnvValue(envName);
 
         final String lineBreak = "========================================";
 
@@ -34,14 +34,14 @@ public final class EnvVariableManager {
         } else if (!systemEnvNotNull & localEnvNotNull) {
             System.out.println("System environment variable not found for: " + envName);
             System.out.println("Local environment variable found for: " + envName);
-            System.out.println("Using system environment variable for: " + envName);
+            System.out.println("Using local environment variable for: " + envName);
             System.out.println(lineBreak);
 
             return localEnv;
         } else if (systemEnvNotNull & localEnvNotNull) {
             System.out.println("System environment variable found for: " + envName);
             System.out.println("Local environment variable found for: " + envName);
-            System.out.println("Discarding local environment variable. Using system environment variable for: " + envName);
+            System.out.println("Discarding local environment variable. Using system environment variable instead for: " + envName);
             System.out.println(lineBreak);
 
             return systemEnv;
@@ -54,13 +54,13 @@ public final class EnvVariableManager {
         return value != null;
     }
 
-    private static String SetSystemEnv(String envName) {
+    private static String GetSystemEnvValue(String envName) {
         final String envValue = System.getenv(envName);
 
         return envValue;
     }
 
-    private static String SetLocalEnv(String envName) {
+    private static String GetLocalEnvValue(String envName) {
         final String envValue = dotenv.get(envName, null);
 
         return envValue;
