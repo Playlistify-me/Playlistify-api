@@ -3,6 +3,7 @@ package io.playlistify.api;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.playlistify.api.Authorization.SpotifyApiAuthenticator;
 import io.playlistify.api.Factories.SpotifyApiFactory;
+import io.playlistify.api.Utils.EnvVariableManager;
 import org.apache.hc.core5.http.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,9 +21,8 @@ import java.nio.charset.StandardCharsets;
 class PlaylistifyApiApplicationTests {
     @Test
     void authUriTest() {
-        final Dotenv dotenv = Dotenv.load();
-        final String clientId = dotenv.get("SPOTIFY_CLIENT_ID");
-        final String redirectUrl = dotenv.get("SPOTIFY_REDIRECT_URL");
+        final String clientId = EnvVariableManager.getSpotifyClientId();
+        final String redirectUrl = EnvVariableManager.getSpotifyRedirectUrl();
 
         // encoding url because it's encoded from generateAuthCodeUri
         final String redirectUrlEncoded = URLEncoder.encode(redirectUrl, StandardCharsets.UTF_8);
