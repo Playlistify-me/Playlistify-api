@@ -9,7 +9,7 @@ public final class EnvVariableManager {
 
     private static final String ENV_FILE_NAME = ".env";
 
-    private static final Dotenv dotenv = Dotenv.configure().filename(ENV_FILE_NAME).load();
+    private static final Dotenv dotenv = Dotenv.configure().filename(ENV_FILE_NAME).ignoreIfMissing().load();
 
     private static String spotifyClientId = SetEnv(SPOTIFY_CLIENT_ID);
     private static String spotifyClientSecret = SetEnv(SPOTIFY_CLIENT_SECRET);
