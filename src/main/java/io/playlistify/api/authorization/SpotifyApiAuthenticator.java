@@ -2,6 +2,8 @@ package io.playlistify.api.authorization;
 
 import io.playlistify.api.factories.SpotifyApiFactory;
 import org.apache.hc.core5.http.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
@@ -16,11 +18,15 @@ import java.time.Instant;
 
 public class SpotifyApiAuthenticator {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpotifyApiAuthenticator.class);
 
     /**
      * The {@link SpotifyApi} object required for the URI and Tokens.
      */
     private static final SpotifyApi BASIC_SPOTIFY_API = SpotifyApiFactory.getBasicSpotifyApi();
+
+    private SpotifyApiAuthenticator() {
+    }
 
     /**
      * Generates the {@link URI} from the {@link AuthorizationCodeUriRequest} object.
@@ -31,9 +37,6 @@ public class SpotifyApiAuthenticator {
         return getAuthorizationCodeUriRequest().execute();
     }
 
-    private SpotifyApiAuthenticator() {
-    }
-
     /**
      * Requests and sets the Access and the Refresh tokens in the database.
      *
@@ -41,9 +44,7 @@ public class SpotifyApiAuthenticator {
      *                 This is the code that is returned to the redirect URI after the user has accepted the scopes.
      * @return The access token.
      */
-    public static TokenDto getAccessSetRefreshToken(String authCode) {
-        // Either return [] with both tokens or keep it like this. Not sure yet.
-        // I guess it also needs the user id?
+    public static TokenDto getTokenDto(String authCode) {
         AuthorizationCodeRequest authorizationCodeRequest = getAuthorizationCodeRequest(authCode);
 
         try {
@@ -51,10 +52,17 @@ public class SpotifyApiAuthenticator {
 
             String accessToken = authorizationCodeCredentials.getAccessToken();
             String refreshToken = authorizationCodeCredentials.getRefreshToken();
-            return new TokenDto(accessToken, refreshToken);
+
+            if (accessToken == null || accessToken.isBlank()) {
+                LOGGER.error("Error: access token is null or blank");
+            } else if (refreshToken == null || refreshToken.isBlank()) {
+                LOGGER.error("Error: refresh token is null or blank");
+            } else {
+                return new TokenDto(accessToken, refreshToken);
+            }
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Error: " + e.getMessage());
+            LOGGER.error("Error: {},", e.getMessage());
         }
 
         return null;
@@ -71,7 +79,7 @@ public class SpotifyApiAuthenticator {
     }
 
     /**
-     * Gets the {@link AuthorizationCodeUriRequest} required for the {@link #getAccessSetRefreshToken(String) authCode}.
+     * Gets the {@link AuthorizationCodeUriRequest} required for the {@link #getTokenDto(String) authCode}.
      *
      * @return {@link AuthorizationCodeUriRequest}
      */
@@ -108,7 +116,7 @@ public class SpotifyApiAuthenticator {
             return new ClientCredentialsDto(accessToken, expiresAt);
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Error: " + e.getMessage());
+            LOGGER.error("Error: {},", e.getMessage());
             throw e;
         }
     }

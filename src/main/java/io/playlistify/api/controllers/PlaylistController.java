@@ -17,27 +17,23 @@ import java.io.IOException;
 @RequestMapping("/playlist")
 public class PlaylistController {
 
-    Logger logger = LoggerFactory.getLogger(PlaylistController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlaylistController.class);
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/me")
     public PlaylistSimplified[] getMyPlaylists(@RequestBody TokenDto receivedTokens) {
-        System.out.println("received");
-        logger.info("access = " + receivedTokens.getAccessToken());
-        logger.info("refresh = " + receivedTokens.getRefreshToken());
-
+        LOGGER.info("received");
 
         SpotifyApi spotifyApi = SpotifyApiFactory.getSpotifyApiWithTokens(receivedTokens);
-        logger.info("receivedToken accessToken = " + receivedTokens.getAccessToken());
         PlaylistSimplified[] a = null;
         try {
             a = spotifyApi.getListOfCurrentUsersPlaylists().build().execute().getItems();
         } catch (IOException | SpotifyWebApiException | ParseException e) {
-            logger.info("exception: " + e.getMessage());
+            LOGGER.error("exception: {}", e.getMessage());
         }
 
         if (a == null) {
-            logger.info("a  is null ");
+            LOGGER.info("a is null");
             return a;
         }
 
@@ -45,7 +41,7 @@ public class PlaylistController {
         for (PlaylistSimplified playlistSimplified
                 : a) {
             counter++;
-            logger.info("current a [" + counter + "] = " + playlistSimplified.toString());
+            LOGGER.info("current a [" + counter + "] = " + playlistSimplified.toString());
         }
 
         return a;
