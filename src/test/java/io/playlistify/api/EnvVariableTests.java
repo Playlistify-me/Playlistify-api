@@ -80,7 +80,7 @@ class EnvVariableTests {
     }
 
     @Test
-    public void privateConstructorTest() throws Exception {
+    void privateConstructorTest() throws Exception {
         TestUtils.assertPrivateConstructor(EnvVariableManager.class);
         TestUtils.assertPrivateConstructor(EnvVariableFactory.class);
         TestUtils.assertPrivateConstructor(EnvVariableLogger.class);

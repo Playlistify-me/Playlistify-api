@@ -10,7 +10,7 @@ class TestUtils {
     private TestUtils() {
     }
 
-    public static void assertPrivateConstructor(Class<?> clazz) throws Exception {
+     static void assertPrivateConstructor(Class<?> clazz) throws Exception {
         final String exceptionMessage = clazz.getName() + " does not have a private constructor";
 
         try {

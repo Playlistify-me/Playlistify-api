@@ -25,8 +25,6 @@ public class CallbackController {
 
     @GetMapping("")
     public ResponseEntity<String> callback(@RequestParam String code) {
-        LOGGER.info("code = " + code);
-
         TokenDto tokens = SpotifyApiAuthenticator.getTokenDto(code);
         if (tokens == null) {
             LOGGER.error("tokens is null");
@@ -38,17 +36,18 @@ public class CallbackController {
 
         try {
             User currentUser = spotifyApiWithAccessToken.getCurrentUsersProfile().build().execute();
-            LOGGER.info("user name = " + currentUser.getDisplayName());
+            LOGGER.info("user name = {}", currentUser.getDisplayName());
 
-            LOGGER.info("First playlist name = " + spotifyApiWithAccessToken.getListOfCurrentUsersPlaylists().build().execute().getItems()[0].getName());
+            LOGGER.info("First playlist name = {}", spotifyApiWithAccessToken.getListOfCurrentUsersPlaylists().build().execute().getItems()[0].getName());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             LOGGER.error("Error: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok("ok");
     }
 
-    public RedirectView redirectToHomePage(ResponseEntity responseEntity) {
+    public RedirectView redirectToHomePage(ResponseEntity<String> responseEntity) {
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return new RedirectView("http://localhost:8080");
         } else {
