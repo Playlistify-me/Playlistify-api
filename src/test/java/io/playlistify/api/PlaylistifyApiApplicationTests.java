@@ -1,9 +1,7 @@
 package io.playlistify.api;
 
-import io.playlistify.api.Authorization.SpotifyApiAuthenticator;
-import io.playlistify.api.Factories.SpotifyApiFactory;
-import io.playlistify.api.Utils.Environment.EnvVariableManager;
-import org.apache.hc.core5.http.ParseException;
+import io.playlistify.api.authorization.SpotifyApiAuthenticator;
+import io.playlistify.api.utils.environment.EnvVariableManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,8 +14,8 @@ import java.nio.charset.StandardCharsets;
 class PlaylistifyApiApplicationTests {
     @Test
     void authUriTest() {
-        final String clientId = EnvVariableManager.getSpotifyClientId();
-        final String redirectUrl = EnvVariableManager.getSpotifyRedirectUrl();
+        final String clientId = EnvVariableManager.getSpotifyClientIdValue();
+        final String redirectUrl = EnvVariableManager.getSpotifyRedirectUrlValue();
 
         // encoding url because it's encoded from generateAuthCodeUri
         final String redirectUrlEncoded = URLEncoder.encode(redirectUrl, StandardCharsets.UTF_8);

@@ -1,7 +1,7 @@
-package io.playlistify.api.Services;
+package io.playlistify.api.services;
 
-import io.playlistify.api.Entities.User;
-import io.playlistify.api.Respositories.UserRepository;
+import io.playlistify.api.entities.User;
+import io.playlistify.api.respositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

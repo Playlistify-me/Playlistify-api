@@ -1,16 +1,16 @@
-package io.playlistify.api.Utils.Environment;
+package io.playlistify.api.utils.environment;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
 public final class EnvVariable {
     private static final String ENV_FILE_NAME = ".env";
-    private static final Dotenv dotenv = Dotenv.configure().filename(ENV_FILE_NAME).ignoreIfMissing().load();
+    private static final Dotenv DOTENV = Dotenv.configure().filename(ENV_FILE_NAME).ignoreIfMissing().load();
 
     private final String name;
     private final EnvType type;
     private final String value;
     private final boolean notNull;
-    
+
     public EnvVariable(String name, EnvType type) {
         this.name = setName(name);
         this.type = setType(type);
@@ -42,7 +42,7 @@ public final class EnvVariable {
         if (this.type == EnvType.SYSTEM) {
             return System.getenv(this.name);
         } else if (this.type == EnvType.LOCAL) {
-            return dotenv.get(this.name);
+            return DOTENV.get(this.name);
         }
 
         return null;

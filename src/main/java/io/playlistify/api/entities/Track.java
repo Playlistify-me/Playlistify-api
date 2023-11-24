@@ -1,4 +1,4 @@
-package io.playlistify.api.Entities;
+package io.playlistify.api.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;

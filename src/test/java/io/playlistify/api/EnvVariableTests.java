@@ -1,18 +1,19 @@
 package io.playlistify.api;
 
-import io.playlistify.api.Factories.EnvVariableFactory;
-import io.playlistify.api.Utils.Environment.EnvType;
-import io.playlistify.api.Utils.Environment.EnvVariable;
-import io.playlistify.api.Utils.Environment.EnvVariableManager;
+import io.playlistify.api.factories.EnvVariableFactory;
+import io.playlistify.api.utils.environment.EnvType;
+import io.playlistify.api.utils.environment.EnvVariable;
+import io.playlistify.api.utils.environment.EnvVariableLogger;
+import io.playlistify.api.utils.environment.EnvVariableManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class EnvVariableTests {
+class EnvVariableTests {
 
     @Test
-    void EnvVariableCorrectNameTest( ) {
+    void envVariableCorrectNameTest() {
         final String expectedEnvVariableId = "SPOTIFY_CLIENT_ID";
         final String actualEnvVariableId = EnvVariableManager.getConstSpotifyClientId();
 
@@ -29,7 +30,7 @@ public class EnvVariableTests {
     }
 
     @Test
-    void EnvVariableSetAsSystemAndLocalTextTest() {
+    void envVariableSetAsSystemAndLocalTextTest() {
         final String expectedSystemText = "System";
         final String expectedLocalText = "Local";
 
@@ -42,7 +43,7 @@ public class EnvVariableTests {
     }
 
     @Test
-    void EnvVariableFactoryNullNameExceptionTest() {
+    void envVariableFactoryNullNameExceptionTest() {
         final String expectedExceptionMessage = "Name cannot be null";
 
         final Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -55,7 +56,7 @@ public class EnvVariableTests {
     }
 
     @Test
-    void EnvVariableFactoryEmptyNameExceptionTest() {
+    void envVariableFactoryEmptyNameExceptionTest() {
         final String expectedExceptionMessage = "Name cannot be empty";
         final String emptyString = "";
 
@@ -69,12 +70,19 @@ public class EnvVariableTests {
     }
 
     @Test
-    void EnvVariableNotNullTest() {
+    void envVariableNotNullTest() {
         final String envVariableId = EnvVariableManager.getConstSpotifyClientId();
         final EnvType envType = EnvType.LOCAL;
 
         final EnvVariable localEnvVariableId = new EnvVariable(envVariableId, envType);
 
         Assertions.assertTrue(localEnvVariableId.getNotNull());
+    }
+
+    @Test
+    public void privateConstructorTest() throws Exception {
+        TestUtils.assertPrivateConstructor(EnvVariableManager.class);
+        TestUtils.assertPrivateConstructor(EnvVariableFactory.class);
+        TestUtils.assertPrivateConstructor(EnvVariableLogger.class);
     }
 }

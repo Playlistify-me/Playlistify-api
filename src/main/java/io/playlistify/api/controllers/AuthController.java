@@ -1,8 +1,8 @@
-package io.playlistify.api.Controllers;
+package io.playlistify.api.controllers;
 
-import io.playlistify.api.Authorization.AuthCodeRequestDto;
-import io.playlistify.api.Authorization.SpotifyApiAuthenticator;
-import io.playlistify.api.Authorization.TokenDto;
+import io.playlistify.api.authorization.AuthCodeRequestDto;
+import io.playlistify.api.authorization.SpotifyApiAuthenticator;
+import io.playlistify.api.authorization.TokenDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

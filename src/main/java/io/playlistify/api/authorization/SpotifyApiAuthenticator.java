@@ -1,8 +1,6 @@
-package io.playlistify.api.Authorization;
+package io.playlistify.api.authorization;
 
-import io.playlistify.api.Factories.SpotifyApiFactory;
-import io.playlistify.api.GenerateState;
-import lombok.Getter;
+import io.playlistify.api.factories.SpotifyApiFactory;
 import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -17,24 +15,30 @@ import java.net.URI;
 import java.time.Instant;
 
 public class SpotifyApiAuthenticator {
+
+
     /**
      * The {@link SpotifyApi} object required for the URI and Tokens.
      */
-    private static final SpotifyApi spotifyApi = SpotifyApiFactory.getBasicSpotifyApi();
+    private static final SpotifyApi BASIC_SPOTIFY_API = SpotifyApiFactory.getBasicSpotifyApi();
 
     /**
      * Generates the {@link URI} from the {@link AuthorizationCodeUriRequest} object.
+     *
      * @return {@link URI}.
      */
     public static URI generateAuthCodeUri() {
         return getAuthorizationCodeUriRequest().execute();
     }
 
+    private SpotifyApiAuthenticator() {
+    }
+
     /**
      * Requests and sets the Access and the Refresh tokens in the database.
      *
      * @param authCode The authorization code.
-     * This is the code that is returned to the redirect URI after the user has accepted the scopes.
+     *                 This is the code that is returned to the redirect URI after the user has accepted the scopes.
      * @return The access token.
      */
     public static TokenDto getAccessSetRefreshToken(String authCode) {
@@ -58,20 +62,22 @@ public class SpotifyApiAuthenticator {
 
     /**
      * Gets the {@link AuthorizationCodeRequest} required for the {@link AuthorizationCodeCredentials}.
+     *
      * @return
      */
     private static AuthorizationCodeRequest getAuthorizationCodeRequest(String authCode) {
-        return spotifyApi.authorizationCode(authCode)
+        return BASIC_SPOTIFY_API.authorizationCode(authCode)
                 .build();
     }
 
     /**
      * Gets the {@link AuthorizationCodeUriRequest} required for the {@link #getAccessSetRefreshToken(String) authCode}.
+     *
      * @return {@link AuthorizationCodeUriRequest}
      */
     private static AuthorizationCodeUriRequest getAuthorizationCodeUriRequest() {
         //final int generatedStringLength = 35;
-        return spotifyApi.authorizationCodeUri()
+        return BASIC_SPOTIFY_API.authorizationCodeUri()
                 //.state(GenerateState.generateString(generatedStringLength);)
                 //.scope() scope here
                 .build();
@@ -84,6 +90,7 @@ public class SpotifyApiAuthenticator {
 
     /**
      * Gets the access token and expiry time, required for the {@link ClientCredentials}.
+     *
      * @param spotifyApi The {@link SpotifyApi} object required for the {@link ClientCredentialsRequest}.
      * @return {@link ClientCredentialsDto} containing the access token and the time the access token expires.
      */

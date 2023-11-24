@@ -1,8 +1,8 @@
-package io.playlistify.api.Controllers;
+package io.playlistify.api.controllers;
 
-import io.playlistify.api.Authorization.SpotifyApiAuthenticator;
-import io.playlistify.api.Authorization.TokenDto;
-import io.playlistify.api.Factories.SpotifyApiFactory;
+import io.playlistify.api.authorization.SpotifyApiAuthenticator;
+import io.playlistify.api.authorization.TokenDto;
+import io.playlistify.api.factories.SpotifyApiFactory;
 import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

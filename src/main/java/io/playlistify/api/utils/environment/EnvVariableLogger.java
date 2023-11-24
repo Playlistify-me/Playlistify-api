@@ -1,4 +1,4 @@
-package io.playlistify.api.Utils.Environment;
+package io.playlistify.api.utils.environment;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,10 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class EnvVariableLogger {
-    private static final Logger logger = LoggerFactory.getLogger(EnvVariableManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnvVariableManager.class);
+
+    private EnvVariableLogger() {
+    }
 
     public static void logUsing(EnvVariable envVariable) {
         final String using = "Using ";
@@ -16,8 +19,8 @@ public class EnvVariableLogger {
         final String envName = envVariable.getName();
         final String envTypeString = envVariable.getTypeToString();
 
-        logger.info(using + envTypeString + forEnv + envName);
-        logger.info(lineBreak);
+        LOGGER.info("{}{}{}{}", using, envTypeString, forEnv, envName);
+        LOGGER.info(lineBreak);
     }
 
     public static void logVars(List<EnvVariable> envVariableList) {
@@ -28,16 +31,16 @@ public class EnvVariableLogger {
 
     public static void logVar(EnvVariable envVariable) {
         final String foundFor = " environment variable found for: ";
-        final String notFoundFor = " environment variable not found for: ";
+        final String notFoundFor = " environment variable NOT found for: ";
 
         final String envName = envVariable.getName();
         final String envTypeString = envVariable.getTypeToString();
         final boolean envVariableNotNull = envVariable.getNotNull();
 
         if (envVariableNotNull) {
-            logger.info(envTypeString + foundFor + envName);
+            LOGGER.info("{}{}{}", envTypeString, foundFor, envName);
         } else {
-            logger.warn(envTypeString + notFoundFor + envName);
+            LOGGER.warn("{}{}{}", envTypeString, notFoundFor, envName);
         }
     }
 

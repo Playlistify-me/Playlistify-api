@@ -1,23 +1,20 @@
-package io.playlistify.api.Utils.Environment;
+package io.playlistify.api.utils.environment;
 
-import io.playlistify.api.Factories.EnvVariableFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.playlistify.api.factories.EnvVariableFactory;
 
 import java.util.List;
 
 public final class EnvVariableManager {
-    private static final Logger logger = LoggerFactory.getLogger(EnvVariableManager.class);
-
     private static final String SPOTIFY_CLIENT_ID = "SPOTIFY_CLIENT_ID";
     private static final String SPOTIFY_CLIENT_SECRET = "SPOTIFY_CLIENT_SECRET";
     private static final String SPOTIFY_REDIRECT_URL = "SPOTIFY_REDIRECT_URL";
 
-    private static final String spotifyClientId = getEnvValue(SPOTIFY_CLIENT_ID);
-    private static final String spotifyClientSecret = getEnvValue(SPOTIFY_CLIENT_SECRET);
-    private static final String spotifyRedirectUrl = getEnvValue(SPOTIFY_REDIRECT_URL);
+    private static final String CLIENT_ID_VALUE = getEnvValue(SPOTIFY_CLIENT_ID);
+    private static final String CLIENT_SECRET_VALUE = getEnvValue(SPOTIFY_CLIENT_SECRET);
+    private static final String REDIRECT_URL_VALUE = getEnvValue(SPOTIFY_REDIRECT_URL);
 
-    private EnvVariableManager() {}
+    private EnvVariableManager() {
+    }
 
     private static String getEnvValue(String envName) {
         final EnvVariable systemEnv = EnvVariableFactory.getSystemEnvFromName(envName);
@@ -28,15 +25,15 @@ public final class EnvVariableManager {
         boolean systemEnvNotNull = systemEnv.getNotNull();
         boolean localEnvNotNull = localEnv.getNotNull();
 
-        if (systemEnvNotNull & !localEnvNotNull) {
+        if (systemEnvNotNull && !localEnvNotNull) {
             EnvVariableLogger.logVarsAndUsing(envVariableList, systemEnv);
 
             return systemEnv.getValue();
-        } else if (!systemEnvNotNull & localEnvNotNull) {
+        } else if (!systemEnvNotNull && localEnvNotNull) {
             EnvVariableLogger.logVarsAndUsing(envVariableList, localEnv);
 
             return localEnv.getValue();
-        } else if (systemEnvNotNull & localEnvNotNull) {
+        } else if (systemEnvNotNull) {
             EnvVariableLogger.logVarsAndUsing(envVariableList, systemEnv);
 
             return systemEnv.getValue();
@@ -45,16 +42,16 @@ public final class EnvVariableManager {
         }
     }
 
-    public static String getSpotifyClientId() {
-        return spotifyClientId;
+    public static String getSpotifyClientIdValue() {
+        return CLIENT_ID_VALUE;
     }
 
-    public static String getSpotifyClientSecret() {
-        return spotifyClientSecret;
+    public static String getSpotifyClientSecretValue() {
+        return CLIENT_SECRET_VALUE;
     }
 
-    public static String getSpotifyRedirectUrl() {
-        return spotifyRedirectUrl;
+    public static String getSpotifyRedirectUrlValue() {
+        return REDIRECT_URL_VALUE;
     }
 
     public static String getConstSpotifyClientId() {

@@ -1,4 +1,4 @@
-package io.playlistify.api.Utils.Environment;
+package io.playlistify.api.utils.environment;
 
 public enum EnvType {
     SYSTEM("System"),

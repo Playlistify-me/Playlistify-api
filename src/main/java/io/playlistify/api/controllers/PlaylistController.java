@@ -1,19 +1,16 @@
-package io.playlistify.api.Controllers;
+package io.playlistify.api.controllers;
 
-import io.playlistify.api.Authorization.TokenDto;
-import io.playlistify.api.Factories.SpotifyApiFactory;
+import io.playlistify.api.authorization.TokenDto;
+import io.playlistify.api.factories.SpotifyApiFactory;
 import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
-import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.PlaylistSimplified;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 
 @RestController
@@ -24,10 +21,10 @@ public class PlaylistController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/me")
-    public PlaylistSimplified[] getMyPlaylists (@RequestBody TokenDto receivedTokens){
+    public PlaylistSimplified[] getMyPlaylists(@RequestBody TokenDto receivedTokens) {
         System.out.println("received");
         logger.info("access = " + receivedTokens.getAccessToken());
-        logger.info("refresh = " +  receivedTokens.getRefreshToken());
+        logger.info("refresh = " + receivedTokens.getRefreshToken());
 
 
         SpotifyApi spotifyApi = SpotifyApiFactory.getSpotifyApiWithTokens(receivedTokens);
@@ -35,17 +32,18 @@ public class PlaylistController {
         PlaylistSimplified[] a = null;
         try {
             a = spotifyApi.getListOfCurrentUsersPlaylists().build().execute().getItems();
-        } catch (IOException | SpotifyWebApiException | ParseException e){
+        } catch (IOException | SpotifyWebApiException | ParseException e) {
             logger.info("exception: " + e.getMessage());
         }
 
         if (a == null) {
             logger.info("a  is null ");
-            return a;}
+            return a;
+        }
 
         int counter = 0;
         for (PlaylistSimplified playlistSimplified
-             : a) {
+                : a) {
             counter++;
             logger.info("current a [" + counter + "] = " + playlistSimplified.toString());
         }

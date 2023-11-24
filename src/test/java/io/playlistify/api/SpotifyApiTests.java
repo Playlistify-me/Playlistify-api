@@ -1,6 +1,8 @@
 package io.playlistify.api;
 
-import io.playlistify.api.Factories.SpotifyApiFactory;
+import io.playlistify.api.authorization.SpotifyApiAuthenticator;
+import io.playlistify.api.authorization.TokenDto;
+import io.playlistify.api.factories.SpotifyApiFactory;
 import org.apache.hc.core5.http.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,7 +13,7 @@ import se.michaelthelin.spotify.exceptions.detailed.UnauthorizedException;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-public class SpotifyApiTests {
+class SpotifyApiTests {
 
     @Test
     void clientCredentialsDevUserIdTest() {
@@ -60,5 +62,26 @@ public class SpotifyApiTests {
         }
 
         Assertions.assertNotEquals(spotifyDevAccountId, actualUserId);
+    }
+
+    @Test
+    void spotifyApiWithSetTokensTest() {
+        final String expectedAccessToken = "placeholder_access_token";
+        final String expectedRefreshToken = "placeholder_refresh_token";
+
+        final TokenDto tokens = new TokenDto(expectedAccessToken, expectedRefreshToken);
+
+        final SpotifyApi spotifyApi = SpotifyApiFactory.getSpotifyApiWithTokens(tokens);
+        final String actualAccessToken = spotifyApi.getAccessToken();
+        final String actualRefreshToken = spotifyApi.getRefreshToken();
+
+        Assertions.assertEquals(expectedAccessToken, actualAccessToken);
+        Assertions.assertEquals(expectedRefreshToken, actualRefreshToken);
+    }
+
+    @Test
+    void privateConstructorTest() throws Exception {
+        TestUtils.assertPrivateConstructor(SpotifyApiFactory.class);
+        TestUtils.assertPrivateConstructor(SpotifyApiAuthenticator.class);
     }
 }
