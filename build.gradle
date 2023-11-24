@@ -23,11 +23,14 @@ sonar {
 }
 
 test {
-	finalizedBy jacocoTestReport // report is always generated after tests run
+	jacoco {
+		destinationFile = layout.buildDirectory.file('jacoco/jacocoTest.exec').get().asFile
+		classDumpDir = layout.buildDirectory.dir('jacoco/classpathdumps').get().asFile
+	}
 }
+
 jacocoTestReport {
 	dependsOn test // tests are required to run before generating the report
-
 }
 
 jacoco {
@@ -77,3 +80,9 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.named("sonarqube") {
+	dependsOn("test")
+}
+
+test.finalizedBy("jacocoTestReport");
