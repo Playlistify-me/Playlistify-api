@@ -9,6 +9,7 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.exceptions.detailed.UnauthorizedException;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 public class SpotifyApiTests {
 
@@ -49,6 +50,10 @@ public class SpotifyApiTests {
                     .getId();
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
+            if (e.getClass() == UnknownHostException.class) {
+                Assertions.fail("ERROR WITH HOST: " + e.getMessage());
+            }
+
             Assertions.assertThrowsExactly(UnauthorizedException.class, () -> {
                 throw e;
             });
