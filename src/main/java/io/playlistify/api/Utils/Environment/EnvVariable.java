@@ -23,7 +23,7 @@ public final class EnvVariable {
             throw new IllegalArgumentException("Name cannot be null");
         }
 
-        if (name == "") {
+        if (name.equals("")) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
 
