@@ -1,10 +1,9 @@
 package io.playlistify.api.Factories;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import io.playlistify.api.Authorization.ClientCredentialsDto;
 import io.playlistify.api.Authorization.SpotifyApiAuthenticator;
 import io.playlistify.api.Authorization.TokenDto;
-import io.playlistify.api.Utils.EnvVariableManager;
+import io.playlistify.api.Utils.Environment.EnvVariableManager;
 import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;

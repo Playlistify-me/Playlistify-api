@@ -1,9 +1,8 @@
 package io.playlistify.api;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import io.playlistify.api.Authorization.SpotifyApiAuthenticator;
 import io.playlistify.api.Factories.SpotifyApiFactory;
-import io.playlistify.api.Utils.EnvVariableManager;
+import io.playlistify.api.Utils.Environment.EnvVariableManager;
 import org.apache.hc.core5.http.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
