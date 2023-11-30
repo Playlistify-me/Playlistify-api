@@ -1,6 +1,6 @@
-package io.playlistify.api.Respositories;
+package io.playlistify.api.respositories;
 
-import io.playlistify.api.Entities.User;
+import io.playlistify.api.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

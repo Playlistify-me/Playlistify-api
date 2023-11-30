@@ -1,4 +1,4 @@
-package io.playlistify.api.Entities;
+package io.playlistify.api.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinTable;
@@ -11,7 +11,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class MergedPlaylist extends Playlist{
+public class MergedPlaylist extends Playlist {
     public boolean isMerged;
 
     @ManyToMany

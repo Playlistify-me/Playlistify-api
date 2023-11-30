@@ -1,8 +1,8 @@
-package io.playlistify.api.Controllers;
+package io.playlistify.api.controllers;
 
-import io.playlistify.api.Authorization.SpotifyApiAuthenticator;
-import io.playlistify.api.Authorization.TokenDto;
-import io.playlistify.api.Factories.SpotifyApiFactory;
+import io.playlistify.api.authorization.SpotifyApiAuthenticator;
+import io.playlistify.api.authorization.TokenDto;
+import io.playlistify.api.factories.SpotifyApiFactory;
 import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,35 +21,33 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/callback")
 public class CallbackController {
-    Logger logger = LoggerFactory.getLogger(CallbackController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CallbackController.class);
 
     @GetMapping("")
     public ResponseEntity<String> callback(@RequestParam String code) {
-        logger.info("code = " + code);
-
-        TokenDto tokens = SpotifyApiAuthenticator.getAccessSetRefreshToken(code);
+        TokenDto tokens = SpotifyApiAuthenticator.getTokenDto(code);
+        if (tokens == null) {
+            LOGGER.error("tokens is null");
+            return ResponseEntity.badRequest().body("bad request");
+        }
 
         SpotifyApi spotifyApiWithAccessToken = SpotifyApiFactory.getSpotifyApiWithTokens(tokens);
 
-        logger.info("access code = " + spotifyApiWithAccessToken.getAccessToken());
-
-        logger.info("refresh token = " + spotifyApiWithAccessToken.getRefreshToken());
 
         try {
             User currentUser = spotifyApiWithAccessToken.getCurrentUsersProfile().build().execute();
-            logger.info("user name = " + currentUser.getDisplayName());
+            LOGGER.info("user name = {}", currentUser.getDisplayName());
 
-            logger.info("First playlist name = " + spotifyApiWithAccessToken.getListOfCurrentUsersPlaylists().build().execute().getItems()[0].getName());
+            LOGGER.info("First playlist name = {}", spotifyApiWithAccessToken.getListOfCurrentUsersPlaylists().build().execute().getItems()[0].getName());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Error: " + e.getMessage());
+            LOGGER.error("Error: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
-        return ResponseEntity.ok("callback");
-
-        // redirect to home page
+        return ResponseEntity.ok("ok");
     }
 
-    public RedirectView redirectToHomePage(ResponseEntity responseEntity) {
+    public RedirectView redirectToHomePage(ResponseEntity<String> responseEntity) {
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return new RedirectView("http://localhost:8080");
         } else {

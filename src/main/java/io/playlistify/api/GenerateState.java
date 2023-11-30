@@ -6,8 +6,9 @@ package io.playlistify.api;
 public class GenerateState {
     /**
      * Generates a random string of characters.
+     *
      * @param length The length of the string to be generated.
-     * Will be checked by {@link #checkLength(int)}.
+     *               Will be checked by {@link #checkLength(int)}.
      * @return The generated string of random characters.
      */
     public static String generateString(int length) {
@@ -26,6 +27,7 @@ public class GenerateState {
 
     /**
      * Checks if the length of the generated string is between 25 and 65.
+     *
      * @param length The length to check.
      * @return The length of the string to be generated if it is between 25 and 65. Otherwise, returns 35.
      */

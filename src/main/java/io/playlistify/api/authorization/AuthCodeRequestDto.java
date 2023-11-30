@@ -1,4 +1,4 @@
-package io.playlistify.api.Authorization;
+package io.playlistify.api.authorization;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
