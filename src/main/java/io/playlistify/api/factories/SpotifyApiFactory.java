@@ -39,6 +39,14 @@ public class SpotifyApiFactory {
                 .build();
     }
 
+    public static SpotifyApi getSpotifyApiWithAccessToken(String accessToken) {
+        return new SpotifyApi.Builder()
+                .setClientId(CLIENT_ID)
+                .setClientSecret(CLIENT_SECRET)
+                .setAccessToken(accessToken)
+                .build();
+    }
+
     public static SpotifyApi getSpotifyApiClientCredentials() throws IOException, ParseException, SpotifyWebApiException {
         final SpotifyApi spotifyApi = getBasicSpotifyApi();
 
