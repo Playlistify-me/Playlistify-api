@@ -71,7 +71,7 @@ public class PlaylistUtils {
         return spotifyApi.getPlaylist(playlistId).build().execute();
     }
 
-    public static Playlist[] getPlaylistFromPlaylistIdUrlModels(PlaylistIdUriModel[] playlistIdUriModels, SpotifyApi spotifyApi) throws IOException, ParseException, SpotifyWebApiException {
+    public static Playlist[] getPlaylistsFromPlaylistIdUrlModels(PlaylistIdUriModel[] playlistIdUriModels, SpotifyApi spotifyApi) throws IOException, ParseException, SpotifyWebApiException {
         Playlist[] playlists = new Playlist[playlistIdUriModels.length];
 
         for (int i = 0; i < playlistIdUriModels.length; i++) {
@@ -98,9 +98,6 @@ public class PlaylistUtils {
             for (int i = 0; i < trackIdUriModels.length; i++) {
                 trackUrisString[i] = trackIdUriModels[i].getUri();
             }
-
-            // honestly barely an idea how it works but seems fancy (:<
-            // String[] trackUrisString = Arrays.stream(trackIdUriModels).map(TrackIdUriModel::getUri).toArray(String[]::new);
 
             spotifyApi.addItemsToPlaylist(newPlaylist.getId(), trackUrisString).build().execute();
 

@@ -18,7 +18,6 @@ import se.michaelthelin.spotify.model_objects.specification.Playlist;
 import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -61,7 +60,7 @@ public class MergeController {
         }
 
         try {
-            playlists = PlaylistUtils.getPlaylistFromPlaylistIdUrlModels(playlistIdUriModels, spotifyApi);
+            playlists = PlaylistUtils.getPlaylistsFromPlaylistIdUrlModels(playlistIdUriModels, spotifyApi);
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             LOGGER.error("exception: playlists {}", e.getMessage());
         }

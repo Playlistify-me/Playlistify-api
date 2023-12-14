@@ -72,28 +72,31 @@ private static final String playlistifyDevAccountId = "31htnbwollsrbp7lmf3uvwq3h
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping("/getTracks/{playlistId}")
+    @GetMapping("/getTracks/{playlistIds}")
     @ResponseBody
-    public PlaylistTrack[] getTracksFromPlaylist(@PathVariable String playlistId) {
+    public PlaylistTracksWithId[] getTracksFromPlaylist(@PathVariable String[] playlistIds) {
         //TODO: for now only dev account so still has to include accessToken some day
 
-        LOGGER.info("received get request for tracks from playlist id: {}", playlistId);
+        LOGGER.info("received get request for playlistTracksWithId[] with playlist ids: {}", (Object) playlistIds);
 
-        PlaylistIdUriModel playlistIdUriModel = new PlaylistIdUriModel(playlistId);
-        String[] playlistIds = {"one", "two"};
+        PlaylistIdUriModel[] playlistIdUriModels = PlaylistUtils.getPlaylistModelsFromPlaylistUrisOrIds(playlistIds);
         PlaylistTrack[] playlistTracks = null;
-        PlaylistTracksWithId playlistTracksWithId = null;
+        PlaylistTracksWithId[] playlistTracksWithId = new PlaylistTracksWithId[playlistIds.length];
 
         try {
             SpotifyApi spotifyApi = SpotifyApiFactory.getSpotifyApiClientCredentials();
-            Playlist playlist = PlaylistUtils.getPlaylistFromPlaylistIdUrlModel(playlistIdUriModel, spotifyApi);
-            playlistTracks = TrackUtils.getPlaylistTracksFromPlaylist(playlist);
-            playlistTracksWithId = new PlaylistTracksWithId(playlistId, playlistTracks);
+            Playlist[] playlists = PlaylistUtils.getPlaylistsFromPlaylistIdUrlModels(playlistIdUriModels, spotifyApi);
+            playlistTracks = TrackUtils.getPlaylistTracksFromPlaylists(playlists);
+
+            for (int i = 0; i < playlistIdUriModels.length; i++) {
+                String trackId = playlistIdUriModels[i].getId();
+                playlistTracksWithId[i] = new PlaylistTracksWithId(trackId, playlistTracks);
+            }
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             LOGGER.error("exception: {}", e.getMessage());
         }
 
-        return playlistTracks;
+        return playlistTracksWithId;
     }
 }
